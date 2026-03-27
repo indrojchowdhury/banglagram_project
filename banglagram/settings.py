@@ -1,13 +1,19 @@
 import os
 from pathlib import Path
 
-# 1. Base Directory Definition
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'  # This is where collectstatic will send files
+
+# Media files (User-uploaded content like profile pictures)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 # 2. Security Settings (Change the SECRET_KEY for production)
 SECRET_KEY = 'django-insecure-your-unique-key-here'
 DEBUG = False
-ALLOWED_HOSTS = ['indrojchowdhury.pythonanywhere.com']
+ALLOWED_HOSTS = ['indro.pythonanywhere.com']
 
 # 3. Application Definition
 INSTALLED_APPS = [
