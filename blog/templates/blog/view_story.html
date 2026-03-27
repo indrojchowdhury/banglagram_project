@@ -1,0 +1,51 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10">
+    <div class="relative rounded-[2.5rem] overflow-hidden shadow-xl h-96">
+        <img src="{{ story.image.url }}" alt="Story by {{ story.user.username }}" class="w-full h-full object-cover">
+        
+        <!-- Story Info Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 flex flex-col justify-between p-6">
+            <!-- Header with close -->
+            <div class="flex justify-between items-start">
+                <div class="flex items-center space-x-3">
+                    {% if story.user.profile.profile_pic %}
+                        <img src="{{ story.user.profile.profile_pic.url }}" class="w-12 h-12 rounded-full object-cover border-2 border-white">
+                    {% else %}
+                        <div class="w-12 h-12 rounded-full bg-blue-400 flex items-center justify-center text-white font-bold border-2 border-white">
+                            {{ story.user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                    <div class="text-white">
+                        <p class="font-bold">{{ story.user.username }}</p>
+                        <p class="text-xs opacity-75">{{ story.created_at|date:"M d, Y H:i" }}</p>
+                    </div>
+                </div>
+                <a href="{% url 'stories' %}" class="text-white text-2xl hover:opacity-75">×</a>
+            </div>
+            
+            <!-- Footer with viewers -->
+            <div class="space-y-2">
+                {% if request.user == story.user %}
+                    <div class="flex items-center justify-between">
+                        <a href="{% url 'story_viewers' story.pk %}" class="flex items-center space-x-2 text-white hover:opacity-75 transition">
+                            <span class="text-xl">👁️</span>
+                            <span class="text-sm font-semibold">{{ story.total_views }} views</span>
+                        </a>
+                        <a href="{% url 'delete_story' story.pk %}" class="text-red-400 hover:text-red-300 text-sm font-bold">Delete</a>
+                    </div>
+                {% else %}
+                    <div class="flex items-center text-white text-sm">
+                        <span class="text-lg">👁️</span>
+                        <span class="ml-2">{{ story.total_views }} views</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-6">
+        <a href="{% url 'stories' %}" class="text-blue-600 font-bold hover:underline">Back to Stories</a>
+    </div>
+</div>
+{% endblock %}

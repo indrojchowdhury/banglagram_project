@@ -1,0 +1,31 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto p-10">
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="text-4xl font-bold">All Posts</h2>
+        <a href="{% url 'post_create' %}" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition">+ New Post</a>
+    </div>
+
+    {% if posts %}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {% for post in posts %}
+            <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-100 flex flex-col">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover rounded-2xl mb-4">
+                {% endif %}
+                <h3 class="text-xl font-bold mb-2">{{ post.title }}</h3>
+                <p class="text-gray-600 text-sm mb-4">{{ post.content|truncatewords:20 }}</p>
+                <div class="flex justify-between items-center mt-auto">
+                    <small class="text-gray-400">By {{ post.author.username }}</small>
+                    <a href="{% url 'post_detail' post.pk %}" class="text-blue-600 font-bold hover:underline">Read More →</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-20">
+            <p class="text-gray-500 text-lg">No posts yet. <a href="{% url 'post_create' %}" class="text-blue-600 font-bold">Create one!</a></p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

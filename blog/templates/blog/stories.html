@@ -1,0 +1,70 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<div class="max-w-7xl mx-auto p-10">
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="text-3xl font-bold">Stories</h2>
+        <a href="{% url 'create_story' %}" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition text-sm">+ Create Story</a>
+    </div>
+
+    {% if stories %}
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {% for story in stories %}
+            <div class="relative rounded-[2rem] overflow-hidden shadow-lg group h-80 cursor-pointer">
+                <img src="{{ story.image.url }}" alt="Story by {{ story.user.username }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                
+                <!-- Overlay on hover -->
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition duration-300 flex flex-col justify-between p-4 opacity-0 group-hover:opacity-100">
+                    <!-- User info -->
+                    <div class="flex items-center space-x-2">
+                        {% if story.user.profile.profile_pic %}
+                            <img src="{{ story.user.profile.profile_pic.url }}" class="w-10 h-10 rounded-full object-cover border-2 border-white">
+                        {% else %}
+                            <div class="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center text-white font-bold text-xs border-2 border-white">
+                                {{ story.user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                        <div class="text-white">
+                            <p class="font-bold text-sm">{{ story.user.username }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="space-y-2">
+                        <a href="{% url 'view_story' story.pk %}" class="block w-full text-center bg-blue-600 text-white py-2 rounded-lg font-bold text-sm hover:bg-blue-700">
+                            View Story
+                        </a>
+                        {% if request.user == story.user %}
+                            <div class="flex space-x-2">
+                                <a href="{% url 'story_viewers' story.pk %}" class="flex-1 flex items-center justify-center bg-white/20 text-white py-2 rounded-lg font-bold text-sm hover:bg-white/30 space-x-1">
+                                    <span>👁️</span>
+                                    <span>{{ story.total_views }}</span>
+                                </a>
+                                <a href="{% url 'delete_story' story.pk %}" class="flex-1 bg-red-500/80 text-white py-2 rounded-lg font-bold text-sm hover:bg-red-600">
+                                    Delete
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="text-white text-center text-sm flex items-center justify-center space-x-1">
+                                <span>👁️</span>
+                                <span>{{ story.total_views }} views</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Badge with view count -->
+                <div class="absolute top-3 right-3 bg-black/70 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center space-x-1">
+                    <span>👁️</span>
+                    <span>{{ story.total_views }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-20 bg-gray-50 rounded-[2.5rem]">
+            <p class="text-gray-500 text-lg mb-4">No stories yet. Be the first to create one!</p>
+            <a href="{% url 'create_story' %}" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700">+ Create Story</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

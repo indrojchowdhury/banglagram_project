@@ -1,0 +1,43 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10 p-10 bg-white rounded-[2.5rem] shadow-xl border border-gray-100">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h2 class="text-3xl font-black text-gray-800">Story Viewers</h2>
+            <p class="text-gray-500 text-sm mt-1">Total Views: <span class="font-bold text-lg">{{ viewers.count }}</span></p>
+        </div>
+        <a href="{% url 'view_story' story.pk %}" class="text-blue-600 font-bold hover:underline">Back to Story</a>
+    </div>
+    
+    {% if viewers %}
+        <div class="space-y-4">
+            {% for view in viewers %}
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-blue-300 transition">
+                    <div class="flex items-center space-x-4">
+                        {% if view.viewer.profile.profile_pic %}
+                            <img src="{{ view.viewer.profile.profile_pic.url }}" class="w-12 h-12 rounded-full object-cover">
+                        {% else %}
+                            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">
+                                {{ view.viewer.username|first|upper }}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <a href="{% url 'user_profile' view.viewer.username %}" class="font-semibold text-gray-800 hover:text-blue-600">
+                                {{ view.viewer.username }}
+                            </a>
+                            <p class="text-xs text-gray-500">{{ view.viewer.first_name|default:view.viewer.username }}</p>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        {{ view.viewed_at|date:"M d, Y h:i A" }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-20 bg-gray-50 rounded-[2.5rem]">
+            <p class="text-gray-500 text-lg">No one has viewed this story yet</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

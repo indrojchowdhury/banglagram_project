@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Smooth navigation transition */
+        .nav-link {
+            transition: all 0.5s ease-in-out;
+        }
+        
+        /* Pendulum animation */
+        @keyframes pendulum {
+            0% {
+                transform: rotateZ(-5deg);
+                transform-origin: top center;
+            }
+            50% {
+                transform: rotateZ(5deg);
+                transform-origin: top center;
+            }
+            100% {
+                transform: rotateZ(-5deg);
+                transform-origin: top center;
+            }
+        }
+        
+        .pendulum {
+            animation: pendulum 8s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white px-10 py-4 flex justify-between items-center border-b sticky top-0 z-50">
+        <a href="{% url 'home' %}" class="text-4xl font-black text-blue-600 hover:opacity-80 transition">B</a>
+        <div class="flex space-x-8 font-bold text-gray-600">
+            <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}bg-slate-800 text-white{% else %}hover:text-blue-600{% endif %} px-5 py-2 rounded-xl">Home</a>
+            <a href="{% url 'stories' %}" class="nav-link {% if request.resolver_match.url_name == 'stories' %}bg-slate-800 text-white{% else %}hover:text-blue-600{% endif %} px-5 py-2 rounded-xl">Stories</a>
+            <a href="{% url 'all_posts' %}" class="nav-link {% if request.resolver_match.url_name == 'all_posts' %}bg-slate-800 text-white{% else %}hover:text-blue-600{% endif %} px-5 py-2 rounded-xl">All Posts</a>
+        </div>
+        <div class="flex items-center space-x-4">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="text-blue-600 font-bold hover:underline">{{ user.username }}</a>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">{% csrf_token %}<button type="submit" class="text-red-500 font-bold hover:underline">Logout</button></form>
+            {% else %}
+                <a href="{% url 'login' %}" class="text-blue-600 font-bold">Login</a>
+            {% endif %}
+            <div class="w-10 h-10 rounded-full border-2 border-orange-400 bg-gray-200"></div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer class="bg-[#1e293b] text-gray-400 py-20 px-10 mt-20 grid grid-cols-3 gap-10">
+        <div><h4 class="font-bold text-xs uppercase tracking-widest mb-4">Services</h4><p>Branding</p><p>Design</p></div>
+        <div><h4 class="font-bold text-xs uppercase tracking-widest mb-4">Company</h4><p>About us</p><p>Contact</p></div>
+        <div><h4 class="font-bold text-xs uppercase tracking-widest mb-4">Legal</h4><p>Terms of use</p><p>Privacy</p></div>
+    </footer>
+</body>
+</html>

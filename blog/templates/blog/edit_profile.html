@@ -1,0 +1,84 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<style>
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    textarea,
+    input[type="file"] {
+        font-size: 14px !important;
+        width: 100%;
+        padding: 8px;
+    }
+    
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    textarea:focus {
+        outline: none;
+    }
+</style>
+
+<div class="max-w-2xl mx-auto mt-10 p-10 bg-white rounded-[2.5rem] shadow-xl border border-gray-100">
+    <h2 class="text-3xl font-black text-center mb-10 text-[#2563eb]">Edit Your Profile</h2>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-6">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- User Information -->
+        <div class="border-b pb-6">
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Account Information</h3>
+            
+            {% for field in user_form %}
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                        {{ field.label }}
+                    </label>
+                    <div class="w-full border rounded-xl px-3 py-2 bg-gray-50 focus-within:ring-2 focus-within:ring-blue-500 transition">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Profile Information -->
+        <div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Profile Information</h3>
+            
+            {% for field in profile_form %}
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                        {{ field.label }}
+                    </label>
+                    <div class="w-full border rounded-xl px-3 py-2 bg-gray-50 focus-within:ring-2 focus-within:ring-blue-500 transition">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="flex space-x-4">
+            <button type="submit" class="flex-1 bg-[#2563eb] text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg">
+                Save Changes
+            </button>
+            <a href="{% url 'profile' %}" class="flex-1 bg-gray-300 text-gray-800 py-3 rounded-xl font-bold hover:bg-gray-400 transition shadow-lg text-center">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
