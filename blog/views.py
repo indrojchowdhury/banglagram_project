@@ -6,8 +6,8 @@ from .forms import UserRegisterForm, PostForm, UserUpdateForm, UserProfileForm, 
 from django.contrib.auth.models import User
 
 def home(request):
-    posts = Post.objects.all().order_by('-created_at')
-    stories = Story.objects.all().order_by('-created_at')
+    posts = Post.objects.select_related('author').order_by('-created_at')
+    stories = Story.objects.select_related('user', 'user__profile').order_by('-created_at')
     return render(request, 'blog/home.html', {'posts': posts, 'stories': stories})
 
 def register(request):
@@ -28,7 +28,9 @@ def post_create(request):
         if form.is_valid():
             form.instance.author = request.user
             form.save()
+            messages.success(request, 'Post created successfully.')
             return redirect('home')
+        messages.error(request, 'Post could not be created. Please fix the errors below.')
     else:
         form = PostForm()
     return render(request, 'blog/post_form.html', {'form': form})
@@ -44,7 +46,9 @@ def post_update(request, pk):
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Post updated successfully.')
             return redirect('post_detail', pk=post.pk)
+        messages.error(request, 'Post could not be updated. Please fix the errors below.')
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/post_form.html', {'form': form})
@@ -74,7 +78,7 @@ def like_post(request, pk):
     return redirect('post_detail', pk=pk)
 
 def all_posts(request):
-    posts = Post.objects.all().order_by('-created_at')
+    posts = Post.objects.select_related('author').order_by('-created_at')
     return render(request, 'blog/posts.html', {'posts': posts})
 
 def stories_list(request):
@@ -82,18 +86,27 @@ def stories_list(request):
     return render(request, 'blog/stories.html', {'stories': stories})
 
 @login_required
-def profile(request, username=None):
-    """View user profile"""
-    if username:
-        user = get_object_or_404(User, username=username)
-    else:
-        user = request.user
-    
-    userprofile = get_object_or_404(UserProfile, user=user)
-    user_posts = Post.objects.filter(author=user).order_by('-created_at')
-    
+def profile(request):
+    """View current user's profile."""
+    userprofile = get_object_or_404(UserProfile, user=request.user)
+    user_posts = Post.objects.filter(author=request.user).select_related('author').order_by('-created_at')
+
     return render(request, 'blog/profile.html', {
-        'profile_user': user,
+        'profile_user': request.user,
+        'userprofile': userprofile,
+        'user_posts': user_posts
+    })
+
+
+@login_required
+def user_profile(request, username):
+    """View another user's profile and posts."""
+    profile_user = get_object_or_404(User, username=username)
+    userprofile = get_object_or_404(UserProfile, user=profile_user)
+    user_posts = Post.objects.filter(author=profile_user).select_related('author').order_by('-created_at')
+
+    return render(request, 'blog/profile.html', {
+        'profile_user': profile_user,
         'userprofile': userprofile,
         'user_posts': user_posts
     })

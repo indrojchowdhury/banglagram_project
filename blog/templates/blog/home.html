@@ -5,7 +5,7 @@
     <div class="max-w-xl">
         <h1 class="text-3xl font-bold mb-4">Connect, Share and Explore with BanglaGram</h1>
         <p class="text-sm mb-6 opacity-80">BanglaGram connects you with your friends and community to share moments and stories.</p>
-        <a href="#posts" class="bg-white text-blue-600 px-6 py-2 rounded-xl font-semibold shadow-lg text-sm">Explore Posts →</a>
+        <a href="#posts" class="bg-white text-blue-600 px-6 py-2 rounded-xl font-semibold shadow-lg text-sm">Explore Posts -></a>
     </div>
     <div class="hidden md:block w-1/3 h-48 rounded-3xl overflow-hidden">
         <img src="{% static 'images/image.png' %}" alt="BanglaGram" class="w-full h-full object-cover rounded-3xl pendulum">
@@ -13,7 +13,6 @@
 </header>
 
 <div class="max-w-7xl mx-auto p-10">
-    <!-- Stories Posted Section -->
     <div class="mb-12">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Stories Posted</h2>
@@ -21,20 +20,18 @@
                 <a href="{% url 'create_story' %}" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-semibold text-sm">+ Add Story</a>
             {% endif %}
         </div>
-        
+
         {% if stories %}
             <div class="overflow-x-auto pb-4">
                 <div class="flex space-x-6 min-w-min">
                     {% for story in stories %}
                         <div class="relative rounded-[2rem] overflow-hidden shadow-lg group flex-shrink-0 w-40 h-56 cursor-pointer">
                             <img src="{{ story.image.url }}" alt="Story by {{ story.user.username }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                            
-                            <!-- Overlay -->
+
                             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition duration-300 flex flex-col justify-between p-3 opacity-0 group-hover:opacity-100">
-                                <!-- User info -->
                                 <div class="flex items-center space-x-2">
                                     {% if story.user.profile.profile_pic %}
-                                        <img src="{{ story.user.profile.profile_pic.url }}" class="w-8 h-8 rounded-full object-cover border-2 border-white">
+                                        <img src="{{ story.user.profile.profile_pic.url }}" alt="{{ story.user.username }}" class="w-8 h-8 rounded-full object-cover border-2 border-white">
                                     {% else %}
                                         <div class="w-8 h-8 rounded-full bg-blue-400 flex items-center justify-center text-white font-bold text-xs border-2 border-white">
                                             {{ story.user.username|first|upper }}
@@ -42,16 +39,14 @@
                                     {% endif %}
                                     <p class="text-white font-bold text-xs">{{ story.user.username }}</p>
                                 </div>
-                                
-                                <!-- View button -->
+
                                 <a href="{% url 'view_story' story.pk %}" class="block w-full text-center bg-blue-600 text-white py-1 rounded-lg font-bold text-xs hover:bg-blue-700">
                                     View
                                 </a>
                             </div>
-                            
-                            <!-- View count badge -->
+
                             <div class="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center space-x-1">
-                                <span>👁️</span>
+                                <span>Views</span>
                                 <span>{{ story.total_views }}</span>
                             </div>
                         </div>
@@ -70,7 +65,6 @@
         {% endif %}
     </div>
 
-    <!-- Recent Posts Section -->
     <div class="flex justify-between items-center mb-8">
         <h2 class="text-2xl font-bold">Recent Posts</h2>
         <a href="{% url 'post_create' %}" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-semibold text-sm">+ New Post</a>
@@ -80,11 +74,17 @@
         {% for post in posts %}
         <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-100 flex flex-col">
             <div class="h-48 bg-gray-100 rounded-2xl mb-4 overflow-hidden">
-                {% if post.image %}<img src="{{ post.image.url }}" class="w-full h-full object-cover">{% endif %}
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-sm font-semibold text-gray-400">
+                        No image uploaded
+                    </div>
+                {% endif %}
             </div>
             <h3 class="text-lg font-semibold mb-2">{{ post.title }}</h3>
             <p class="text-gray-500 text-xs mb-6 flex-grow">{{ post.content|truncatewords:15 }}</p>
-            
+
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="w-8 h-8 rounded-full bg-blue-100 mr-2"></div>
@@ -93,8 +93,13 @@
                         <p class="text-xs text-gray-400">{{ post.created_at|date:"d M Y" }}</p>
                     </div>
                 </div>
-                <a href="{% url 'post_detail' post.pk %}" class="bg-blue-600 text-white px-4 py-1 rounded-lg text-xs font-semibold">Read →</a>
+                <a href="{% url 'post_detail' post.pk %}" class="bg-blue-600 text-white px-4 py-1 rounded-lg text-xs font-semibold">Read -></a>
             </div>
+        </div>
+        {% empty %}
+        <div class="md:col-span-3 bg-white rounded-[2.5rem] p-10 text-center shadow-sm border border-gray-100">
+            <p class="text-lg font-semibold text-gray-700">No posts available yet.</p>
+            <p class="text-sm text-gray-500 mt-2">Create the first post to show it on the homepage.</p>
         </div>
         {% endfor %}
     </div>

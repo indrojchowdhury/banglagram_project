@@ -3,21 +3,16 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'  # This is where collectstatic will send files
-
-# Media files (User-uploaded content like profile pictures)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 # 2. Security Settings (Change the SECRET_KEY for production)
 SECRET_KEY = 'django-insecure-your-unique-key-here'
-DEBUG = False
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 ALLOWED_HOSTS = [
     'indro.pythonanywhere.com',
     'indrojchowdhury.pythonanywhere.com',
     'localhost',
     '127.0.0.1',
+    '0.0.0.0',
+    'testserver',
 ]
 
 # 3. Application Definition
@@ -85,7 +80,8 @@ USE_TZ = True
 
 # 7. Static Files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # 8. Media Files (Uploaded User Images/Stories)
 MEDIA_URL = '/media/'

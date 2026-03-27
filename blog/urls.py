@@ -4,7 +4,8 @@ from . import views
 
 urlpatterns = [
     # Homepage
-    path('', views.home, name='home'),
+    path('admin/', admin.site.urls),
+    path('', include('blog.urls')),
     
     # All Posts & Stories
     path('posts/', views.all_posts, name='all_posts'),
