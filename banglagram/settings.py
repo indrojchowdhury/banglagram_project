@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 2. Security Settings (Change the SECRET_KEY for production)
 SECRET_KEY = 'django-insecure-your-unique-key-here'
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'true').lower() == 'true'
 ALLOWED_HOSTS = [
     'indro.pythonanywhere.com',
     'localhost',
