@@ -6,8 +6,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 2. Security Settings (Change the SECRET_KEY for production)
 SECRET_KEY = 'django-insecure-your-unique-key-here'
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = False
+ALLOWED_HOSTS = ['indrojchowdhury.pythonanywhere.com']
 
 # 3. Application Definition
 INSTALLED_APPS = [
@@ -73,8 +73,8 @@ USE_I18N = True
 USE_TZ = True
 
 # 7. Static Files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 # 8. Media Files (Uploaded User Images/Stories)
 MEDIA_URL = '/media/'
