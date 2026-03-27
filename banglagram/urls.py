@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('blog.urls')), # This connects your blog app's URLs
+    path('', include('blog.urls')), # Replace 'blog' with your actual app name
 ]
 
 # This allows images to display during development
