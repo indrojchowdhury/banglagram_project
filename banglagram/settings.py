@@ -13,7 +13,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # 2. Security Settings (Change the SECRET_KEY for production)
 SECRET_KEY = 'django-insecure-your-unique-key-here'
 DEBUG = False
-ALLOWED_HOSTS = ['indro.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    'indro.pythonanywhere.com',
+    'indrojchowdhury.pythonanywhere.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 # 3. Application Definition
 INSTALLED_APPS = [
