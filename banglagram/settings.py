@@ -8,11 +8,13 @@ SECRET_KEY = 'django-insecure-your-unique-key-here'
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = [
     'indro.pythonanywhere.com',
-    'indrojchowdhury.pythonanywhere.com',
     'localhost',
     '127.0.0.1',
     '0.0.0.0',
     'testserver',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'https://indro.pythonanywhere.com',
 ]
 
 # 3. Application Definition
