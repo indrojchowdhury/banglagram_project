@@ -5,6 +5,10 @@ from .models import Post, Comment, Story, UserProfile, StoryView
 from .forms import UserRegisterForm, PostForm, UserUpdateForm, UserProfileForm, StoryForm
 from django.contrib.auth.models import User
 
+
+def can_manage_post(user, post):
+    return user.is_authenticated and (user == post.author or user.is_superuser)
+
 def home(request):
     posts = Post.objects.select_related('author').order_by('-created_at')
     stories = Story.objects.select_related('user', 'user__profile').order_by('-created_at')
@@ -38,7 +42,7 @@ def post_create(request):
 @login_required
 def post_update(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    if post.author != request.user:
+    if not can_manage_post(request.user, post):
         messages.error(request, "You can't edit someone else's post!")
         return redirect('home')
     
@@ -56,9 +60,11 @@ def post_update(request, pk):
 @login_required
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    if post.author == request.user:
+    if can_manage_post(request.user, post):
         post.delete()
         messages.success(request, "Post deleted successfully.")
+    else:
+        messages.error(request, "You can't delete someone else's post!")
     return redirect('home')
 
 def post_detail(request, pk):
